@@ -52,12 +52,17 @@ abstract class ArchenemyMojangExtension(val project: Project) {
         return OfficialMappingDependency(side, version, project.providers.provider { dependency })
     }
 
+    fun intermediaryMappings(version: String): MappingDependency {
+        return yarnMappings(project.dependencies.create("net.fabricmc:intermediary:$version:v2"))
+    }
+
     fun mapJar(
-        dependency: ModuleDependency,
+        dependency: Dependency,
         mappings: MappingDependency,
         sourceNamespace: String,
         destinationNamespace: String
     ): Dependency {
+        dependency as ModuleDependency
         _registerMinecraftProvider
         return project.dependencies.create(
             mappedRepositoryProvider.getDependencyCoordiante(

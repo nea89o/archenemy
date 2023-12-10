@@ -14,7 +14,7 @@ val officialMappings = mojang.officialMappings(
     "1.20.2", MCSide.CLIENT
 )
 val yarnMappings = mojang.yarnMappings(dependencies.create("net.fabricmc:yarn:1.20.2+build.4:v2"))
-val intermediaryMappings = mojang.yarnMappings(dependencies.create("net.fabricmc:intermediary:1.20.2:v2"))
+val intermediaryMappings = mojang.intermediaryMappings("1.20.2")
 
 val whateverAttribute = Attribute.of("whatever", String::class.java)
 kotlin {
