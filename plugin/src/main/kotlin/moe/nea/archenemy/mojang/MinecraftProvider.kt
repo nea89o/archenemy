@@ -2,7 +2,7 @@ package moe.nea.archenemy.mojang
 
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
-import moe.nea.archenemy.DownloadUtils
+import moe.nea.archenemy.util.DownloadUtils
 import moe.nea.archenemy.MCSide
 import moe.nea.archenemy.util.getNullsafeIdentifier
 import net.minecraftforge.artifactural.api.artifact.Artifact
@@ -14,19 +14,7 @@ import net.minecraftforge.artifactural.base.artifact.StreamableArtifact
 import java.io.File
 import java.io.IOException
 import java.net.URL
-import java.security.MessageDigest
 import java.util.concurrent.ConcurrentHashMap
-
-fun MessageDigest.updateField(text: String, value: String) {
-    this.update(text)
-    this.update(":")
-    this.update(value)
-    this.update(";")
-}
-
-fun MessageDigest.update(text: String) {
-    this.update(text.encodeToByteArray())
-}
 
 class MinecraftProvider(val sharedExtension: ArchenemySharedExtension) : Repository {
 

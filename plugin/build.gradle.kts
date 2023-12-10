@@ -7,6 +7,7 @@ plugins {
 repositories {
     mavenCentral()
     maven("https://maven.neoforged.net/releases")
+    maven("https://maven.fabricmc.net")
 }
 
 dependencies {
@@ -14,6 +15,7 @@ dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
+    implementation("net.fabricmc:mapping-io:0.1.8")
 
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")

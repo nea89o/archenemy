@@ -1,7 +1,8 @@
 package moe.nea.archenemy.mojang
 
-import moe.nea.archenemy.DownloadUtils
+import moe.nea.archenemy.util.DownloadUtils
 import moe.nea.archenemy.util.getNullsafeIdentifier
+import moe.nea.archenemy.util.updateField
 import net.minecraftforge.artifactural.api.artifact.Artifact
 import net.minecraftforge.artifactural.api.artifact.ArtifactIdentifier
 import net.minecraftforge.artifactural.api.artifact.ArtifactType

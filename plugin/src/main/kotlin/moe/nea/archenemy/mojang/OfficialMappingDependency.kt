@@ -1,6 +1,8 @@
 package moe.nea.archenemy.mojang
 
 import moe.nea.archenemy.MCSide
+import moe.nea.archenemy.util.update
+import moe.nea.archenemy.util.updateField
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.provider.Provider
 import java.io.File

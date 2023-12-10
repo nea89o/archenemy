@@ -1,4 +1,4 @@
-package moe.nea.archenemy
+package moe.nea.archenemy.util
 
 import java.io.File
 import java.io.IOException

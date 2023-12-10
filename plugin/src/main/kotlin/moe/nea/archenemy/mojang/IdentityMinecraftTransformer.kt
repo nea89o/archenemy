@@ -1,5 +1,6 @@
 package moe.nea.archenemy.mojang
 
+import moe.nea.archenemy.util.update
 import java.io.File
 import java.security.MessageDigest
 
