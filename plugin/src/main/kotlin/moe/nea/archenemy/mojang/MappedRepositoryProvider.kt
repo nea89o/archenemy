@@ -68,26 +68,19 @@ class MappedRepositoryProvider(
 
     private fun getArtifact(coordinates: MappedCoordinates, identifier: ArtifactIdentifier): Artifact? {
         if ((identifier.classifier ?: "") != "") return null
-        val files = sharedExtension.project.configurations.detachedConfiguration(
-            coordinates.dependency,
-            coordinates.mappings.get()
-        ).also { it.isTransitive = false }.resolve()
-        // TODO: move away from classifiers. those are *evil*.
-        // for now i will just manually append -client
-        // or figure out how loom does it, i suppose
-        val sourceName = listOfNotNull(
-            coordinates.dependency.name,
-            coordinates.dependency.version,
-            coordinates.dependency.artifacts.single().classifier
-        ).joinToString(separator = "-", postfix = ".jar")
-        val sourceFile = files.singleOrNull { it.name == sourceName } ?: return null
-        val mappingsFile = coordinates.mappings.findMapping(files) ?: error("Could not find mappings file")
-        val targetFile = cacheDir.resolve(coordinates.transformerHash + ".jar")
-        targetFile.parentFile.mkdirs()
         return StreamableArtifact.ofStreamable(identifier, ArtifactType.BINARY) {
+            val files = sharedExtension.project.configurations.detachedConfiguration(
+                coordinates.dependency,
+            ).also { it.isTransitive = false }.resolve()
+            // TODO: move away from classifiers. those are *evil*.
+            // for now i will just manually append -client
+            // or figure out how loom does it, i suppose
+            val sourceFile = files.singleOrNull { true } ?: error("Only support single file dependencies rn")
+            coordinates.mappings.resolveMappingsOnce(sharedExtension)
+            val targetFile = cacheDir.resolve(coordinates.transformerHash + ".jar")
+            targetFile.parentFile.mkdirs()
             if (!targetFile.exists()) {
                 coordinates.mappings.applyMapping(
-                    mappingsFile = mappingsFile,
                     sourceFile = sourceFile,
                     targetFile = targetFile,
                     sourceNameSpace = coordinates.from,
