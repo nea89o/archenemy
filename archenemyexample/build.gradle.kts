@@ -19,7 +19,13 @@ kotlin {
         compilations.named("main").get().run {
             defaultSourceSet.dependsOn(allJvm)
             this.dependencies {
-                implementation(mojang.minecraft("1.8.9", MCSide.CLIENT))
+                val mappedMinecraft = mojang.mapJar(
+                    mojang.minecraft("1.20.2", MCSide.CLIENT) as ModuleDependency,
+                    mojang.officialMappings("1.20.2", MCSide.CLIENT),
+                    "official",
+                    "named"
+                )
+                implementation(mappedMinecraft)
             }
         }
     }

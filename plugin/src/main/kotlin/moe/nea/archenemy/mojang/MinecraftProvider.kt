@@ -4,6 +4,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 import moe.nea.archenemy.DownloadUtils
 import moe.nea.archenemy.MCSide
+import moe.nea.archenemy.util.getNullsafeIdentifier
 import net.minecraftforge.artifactural.api.artifact.Artifact
 import net.minecraftforge.artifactural.api.artifact.ArtifactIdentifier
 import net.minecraftforge.artifactural.api.artifact.ArtifactType
@@ -28,7 +29,6 @@ fun MessageDigest.update(text: String) {
 }
 
 class MinecraftProvider(val sharedExtension: ArchenemySharedExtension) : Repository {
-
 
     data class MinecraftCoordinate(
         val version: String,
@@ -74,7 +74,7 @@ class MinecraftProvider(val sharedExtension: ArchenemySharedExtension) : Reposit
         val downloadType = when (coordinate.side) {
             MCSide.CLIENT -> "client"
             MCSide.SERVER -> "server"
-        } + if (mappings) "-mappings" else ""
+        } + if (mappings) "_mappings" else ""
         val download = metadata.downloads[downloadType]
             ?: throw IOException("Invalid minecraft side $downloadType for ${coordinate.version}")
         val targetFile =
@@ -96,21 +96,11 @@ class MinecraftProvider(val sharedExtension: ArchenemySharedExtension) : Reposit
         }
     }
 
-    fun getNullsafeIdentifier(identifier: ArtifactIdentifier): ArtifactIdentifier {
-        return object : ArtifactIdentifier by identifier {
-            override fun getClassifier(): String {
-                return if (identifier.classifier == null)
-                    ""
-                else
-                    identifier.classifier
-            }
-        }
-    }
 
     override fun getArtifact(identifier: ArtifactIdentifier?): Artifact {
         if (identifier == null) return Artifact.none()
         if (identifier.name != "minecraft") return Artifact.none()
-        if (!identifier.group.startsWith("archenemy.")) return Artifact.none()
+        if (identifier.group != "archenemy.mojang") return Artifact.none()
         if (identifier.extension == "pom") return Artifact.none()
         val coordinate =
             MinecraftCoordinate(identifier.version, MCSide.valueOf(identifier.classifier.removeSuffix("-mappings")))
@@ -133,6 +123,5 @@ class MinecraftProvider(val sharedExtension: ArchenemySharedExtension) : Reposit
         }
         return Artifact.none()
     }
-
-
 }
+
