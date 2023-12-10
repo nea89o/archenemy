@@ -39,7 +39,8 @@ class MappedRepositoryProvider(
 
     fun getDependencyCoordiante(coordinates: MappedCoordinates): String {
         providers[coordinates.transformerHash] = coordinates
-        return "archenemy.remapped.${coordinates.transformerHash}.${coordinates.mappings.title()}-${coordinates.to}.${coordinates.dependency.group}:${coordinates.dependency.name}:${coordinates.dependency.version}"
+                //-${coordinates.to}.${coordinates.dependency.group}
+        return "archenemy.remapped.${coordinates.transformerHash}.${coordinates.mappings.title()}:${coordinates.dependency.name}:${coordinates.dependency.version}"
     }
 
     fun getDependencyCoordiante(

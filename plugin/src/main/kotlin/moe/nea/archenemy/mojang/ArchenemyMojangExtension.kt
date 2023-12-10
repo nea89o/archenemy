@@ -32,6 +32,10 @@ abstract class ArchenemyMojangExtension(val project: Project) {
 
     private val mappedRepositoryProvider = MappedRepositoryProvider(this)
 
+    fun yarnMappings(dependency: Dependency): MappingDependency {
+        dependency as ModuleDependency
+        return YarnMappingDependency(this, dependency)
+    }
 
     fun officialMappings(version: String, side: MCSide): MappingDependency {
         _registerMinecraftProvider
