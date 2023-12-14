@@ -21,8 +21,14 @@ abstract class ArchenemyMojangExtension(val project: Project) {
         GradleRepositoryAdapter.add(
             project.repositories,
             "Minecraft Mapped Provider",
-            getLocalCacheDirectory().resolve("minecraft-transformation-provider"),
+            getLocalCacheDirectory().resolve("minecraft-mapped-provider"),
             mappedRepositoryProvider
+        )
+        GradleRepositoryAdapter.add(
+            project.repositories,
+            "Minecraft Merged Provider",
+            getLocalCacheDirectory().resolve("minecraft-merged-provider"),
+            mergedRepositoryProvider
         )
         project.repositories.maven {
             it.name = "Minecraft Libraries"
@@ -31,6 +37,7 @@ abstract class ArchenemyMojangExtension(val project: Project) {
     }
 
     private val mappedRepositoryProvider = MappedRepositoryProvider(this)
+    private val mergedRepositoryProvider = MergedRepositoryProvider(this)
 
     fun yarnMappings(dependency: Dependency): MappingDependency {
         dependency as ModuleDependency
@@ -54,6 +61,20 @@ abstract class ArchenemyMojangExtension(val project: Project) {
 
     fun intermediaryMappings(version: String): MappingDependency {
         return yarnMappings(project.dependencies.create("net.fabricmc:intermediary:$version:v2"))
+    }
+
+    fun mergeJar(
+        base: Dependency,
+        overlay: Dependency,
+    ): Dependency {
+        base as ModuleDependency
+        overlay as ModuleDependency
+        _registerMinecraftProvider
+        return project.dependencies.create(
+            mergedRepositoryProvider.getCoordinate(
+                MergedRepositoryProvider.Coordinate(base, overlay)
+            )
+        )
     }
 
     fun mapJar(

@@ -18,6 +18,12 @@ dependencies {
     implementation("net.fabricmc:mapping-io:0.1.8")
     implementation("net.fabricmc:tiny-remapper:0.8.6")
 
+    implementation("org.ow2.asm:asm:9.5")
+    implementation("org.ow2.asm:asm-commons:9.5")
+    implementation("org.ow2.asm:asm-tree:9.5")
+    implementation("org.ow2.asm:asm-analysis:9.5")
+    implementation("org.ow2.asm:asm-util:9.5")
+
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

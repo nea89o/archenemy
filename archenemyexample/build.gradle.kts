@@ -9,7 +9,8 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net")
 }
-val minecraft = mojang.minecraft("1.20.2", MCSide.CLIENT) as ModuleDependency
+val minecraftClient = mojang.minecraft("1.20.2", MCSide.CLIENT) as ModuleDependency
+val minecraftServer = mojang.minecraft("1.20.2", MCSide.CLIENT) as ModuleDependency
 val officialMappings = mojang.officialMappings(
     "1.20.2", MCSide.CLIENT
 )
@@ -30,7 +31,7 @@ kotlin {
             this.dependencies {
                 implementation(
                     mojang.mapJar(
-                        minecraft,
+                        minecraftClient,
                         officialMappings,
                         "official",
                         "named"
@@ -44,11 +45,20 @@ kotlin {
         compilations.named("main").get().run {
             defaultSourceSet.dependsOn(allJvm)
             this.dependencies {
-                val thingy = mojang.mapJar(
-                    minecraft,
+                val intermediaryClient = mojang.mapJar(
+                    minecraftClient,
                     intermediaryMappings,
                     "official",
                     "intermediary"
+                )
+                val intermediaryServer = mojang.mapJar(
+                    minecraftServer,
+                    intermediaryMappings,
+                    "official",
+                    "intermediary"
+                )
+                val thingy = mojang.mergeJar(
+                    intermediaryClient, intermediaryServer
                 )
                 implementation(
                     mojang.mapJar(
