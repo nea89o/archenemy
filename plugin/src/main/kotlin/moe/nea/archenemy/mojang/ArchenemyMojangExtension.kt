@@ -47,7 +47,7 @@ abstract class ArchenemyMojangExtension(val project: Project) {
     fun officialMappings(version: String, side: MCSide): MappingDependency {
         _registerMinecraftProvider
         val dependency by lazy {
-            project.dependencies.create(
+            realize(
                 sharedExtension.minecraftProvider.getMappingsDependencyCoordinate(
                     MinecraftProvider.MinecraftCoordinate(
                         version,
@@ -56,7 +56,14 @@ abstract class ArchenemyMojangExtension(val project: Project) {
                 )
             )
         }
-        return OfficialMappingDependency(side, version, project.providers.provider { dependency })
+        return OfficialMappingDependency(side, version, project.providers.provider { dependency }).also { it.get() }
+    }
+
+    fun libraries(version: String): List<String> {
+        return sharedExtension.getDownloadVersionMetadataTask(version)
+            .getVersionMetadataNow().libraries
+            .map { it.name }
+            .filter { !it.contains("twitch-platform") && !it.contains("twitch-external-platform") }
     }
 
     fun intermediaryMappings(version: String): MappingDependency {
@@ -70,7 +77,7 @@ abstract class ArchenemyMojangExtension(val project: Project) {
         base as ModuleDependency
         overlay as ModuleDependency
         _registerMinecraftProvider
-        return project.dependencies.create(
+        return realize(
             mergedRepositoryProvider.getCoordinate(
                 MergedRepositoryProvider.Coordinate(base, overlay)
             )
@@ -85,7 +92,7 @@ abstract class ArchenemyMojangExtension(val project: Project) {
     ): Dependency {
         dependency as ModuleDependency
         _registerMinecraftProvider
-        return project.dependencies.create(
+        return realize(
             mappedRepositoryProvider.getDependencyCoordiante(
                 MappedRepositoryProvider.MappedCoordinates(
                     dependency, mappings, sourceNamespace, destinationNamespace
@@ -96,7 +103,7 @@ abstract class ArchenemyMojangExtension(val project: Project) {
 
     fun minecraft(version: String, side: MCSide): Dependency {
         _registerMinecraftProvider
-        return project.dependencies.create(
+        return realize(
             sharedExtension.minecraftProvider.getDependencyCoordinate(
                 MinecraftProvider.MinecraftCoordinate(
                     version,
@@ -104,6 +111,15 @@ abstract class ArchenemyMojangExtension(val project: Project) {
                 )
             )
         )
+    }
+
+    fun realize(dependency: String): Dependency {
+        return realize(project.dependencies.create(dependency))
+    }
+
+    fun realize(dependency: Dependency): Dependency {
+        project.configurations.detachedConfiguration(dependency).resolve()
+        return dependency
     }
 
     fun getLocalCacheDirectory(): File {

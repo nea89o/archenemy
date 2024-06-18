@@ -1,17 +1,18 @@
 plugins {
     `java-gradle-plugin`
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.serialization") version "1.8.0"
+    kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 repositories {
     mavenCentral()
     maven("https://maven.neoforged.net/releases")
     maven("https://maven.fabricmc.net")
+	maven("https://repo.nea.moe/releases")
 }
 
 dependencies {
-    implementation("net.neoforged:artifactural:3.0.17")
+    implementation("net.neoforged:artifactural:4.0.0")
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
