@@ -66,6 +66,7 @@ class YarnMappingDependency(
                 )
             )
             .build()
+	    // TODO: this does not copy over the non class file resources, seemingly
         OutputConsumerPath.Builder(targetFile.toPath()).build().use { output ->
             remapper.readInputs(sourceFile.toPath())
             remapper.apply(output)

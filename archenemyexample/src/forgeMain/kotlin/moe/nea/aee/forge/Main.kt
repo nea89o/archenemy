@@ -5,7 +5,25 @@ import net.minecraft.launchwrapper.LaunchClassLoader
 import java.io.File
 
 class Tweaker : ITweaker {
-	override fun acceptOptions(args: MutableList<String>?, gameDir: File?, assetsDir: File?, profile: String?) {
+	val arguments = mutableListOf<String>()
+
+	override fun acceptOptions(
+		args: List<String>, gameDir: File?,
+		assetsDir: File?, profile: String?
+	) {
+		arguments.addAll(args)
+		if (gameDir != null){
+			arguments.add("--gameDir")
+			arguments.add(gameDir.absolutePath)
+		}
+		if (assetsDir != null){
+			arguments.add("--assetsDir")
+			arguments.add(assetsDir.absolutePath)
+		}
+		if (profile != null){
+			arguments.add("--version")
+			arguments.add(profile)
+		}
 	}
 
 	override fun injectIntoClassLoader(classLoader: LaunchClassLoader) {
@@ -16,6 +34,6 @@ class Tweaker : ITweaker {
 	}
 
 	override fun getLaunchArguments(): Array<String> {
-		return arrayOf()
+		return arguments.toTypedArray()
 	}
 }

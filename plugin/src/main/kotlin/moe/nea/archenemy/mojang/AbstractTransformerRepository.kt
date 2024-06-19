@@ -57,7 +57,7 @@ abstract class AbstractTransformerRepository<T : CHashable>(
         val provider = providers[hash] ?: error("Unregistered archenemy ${this.repoIdentifier} dependeny")
         val coordinate = getCoordinate(provider.t)
         require(coordinate.startsWith(identifier.group + ":" + identifier.name + ":" + identifier.version))
-        if (identifier.extension == "pom") return Artifact.none()
+        if (identifier.extension == "pom") return Artifact.none() // TODO: resolve original POM (potentially transformed???)
         return getArtifact(
             getNullsafeIdentifier(identifier),
             provider.t,
